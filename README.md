@@ -1,5 +1,5 @@
 # just_cancer
-Cancer postagregator for longevity reporter
+Cancer postagregator for longevity reporter. It is a part of [Oakvar-Longevity](https://github.com/dna-seq/oakvar-longevity) module.
 
 # Installation
 ## Installation through Oakvar
