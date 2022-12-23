@@ -15,6 +15,21 @@ requires:
 - gnomad
 - ncbigene
 - vcfinfo
+input_columns:
+- clinvar__sig
+- base__hugo
+- omim__omim_id
+- ncbigene__ncbi_desc
+- clinvar__id
+- pubmed__n
+- base__chrom
+- base__pos
+- dbsnp__rsid
+- base__cchange
+- vcfinfo__zygosity
+- gnomad__af
+- clinvar__disease_names
+
 tags:
 - cancer
 - longevity
