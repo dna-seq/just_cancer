@@ -13,7 +13,6 @@ requires:
 - ncbigene
 - pubmed
 - gnomad
-- ncbigene
 - vcfinfo
 input_columns:
 - clinvar__sig
