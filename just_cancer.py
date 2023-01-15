@@ -3,8 +3,8 @@ from pathlib import Path
 import sqlite3
 
 class CravatPostAggregator (BasePostAggregator):
-    genes = set()
-    significance_filter = [
+    genes:set[str] = set()
+    significance_filter:list[str] = [
         "Affects, risk factor",
         "Benign, risk factor",
         "Conflicting interpretations of pathogenicity",
@@ -19,7 +19,7 @@ class CravatPostAggregator (BasePostAggregator):
         "protective, risk factor",
         "risk factor"
     ]
-    col_index = 0
+    col_index:int = 0
 
     def check(self):
         return True
@@ -27,10 +27,10 @@ class CravatPostAggregator (BasePostAggregator):
     def setup (self):
         with open(str(Path(__file__).parent)+"/data/genes.txt") as f:
             self.genes = set(f.read().split("\n"))
-        self.result_path = Path(self.output_dir, self.run_name + "_longevity.sqlite")
-        self.longevity_conn = sqlite3.connect(self.result_path)
-        self.longevity_cursor = self.longevity_conn.cursor()
-        sql_create = """ CREATE TABLE IF NOT EXISTS cancer (
+        self.result_path:Path = Path(self.output_dir, self.run_name + "_longevity.sqlite")
+        self.longevity_conn:Connection = sqlite3.connect(self.result_path)
+        self.longevity_cursor:Cursor = self.longevity_conn.cursor()
+        sql_create:str = """ CREATE TABLE IF NOT EXISTS cancer (
             id integer NOT NULL PRIMARY KEY,
             chrom text,
             pos text,
@@ -59,37 +59,37 @@ class CravatPostAggregator (BasePostAggregator):
 
         
     def annotate (self, input_data):
-        significance = input_data['clinvar__sig']
+        significance:str = input_data['clinvar__sig']
 
         if significance not in self.significance_filter:
             return
 
-        gene = input_data['base__hugo']
+        gene:str = input_data['base__hugo']
         if gene not in self.genes:
             return
 
-        isOk = False
+        isOk:bool = False
 
-        omim_id = input_data['omim__omim_id']
+        omim_id:str = input_data['omim__omim_id']
         if omim_id is not None and omim_id != '':
             isOk = True
 
-        ncbi_desc = input_data['ncbigene__ncbi_desc']
+        ncbi_desc:str = input_data['ncbigene__ncbi_desc']
         if ncbi_desc is not None and ncbi_desc != '':
             isOk = True
 
-        clinvar_id = input_data['clinvar__id']
+        clinvar_id:str = input_data['clinvar__id']
         if clinvar_id is not None and clinvar_id != '':
             isOk = True
 
-        pubmed_n = input_data['pubmed__n']
+        pubmed_n:str = input_data['pubmed__n']
         if pubmed_n is not None and pubmed_n != '':
             isOk = True
 
         if not isOk:
             return
 
-        sql = """ INSERT INTO cancer (
+        sql:str = """ INSERT INTO cancer (
             chrom,
             pos,
             gene,
@@ -102,7 +102,7 @@ class CravatPostAggregator (BasePostAggregator):
             ncbi
         ) VALUES (?,?,?,?,?,?,?,?,?,?) """
 
-        task = (input_data['base__chrom'], input_data['base__pos'], gene,
+        task:tuple[str] = (input_data['base__chrom'], input_data['base__pos'], gene,
                 input_data['dbsnp__rsid'], input_data['base__cchange'],
                 input_data['vcfinfo__zygosity'], input_data['gnomad__af'],
                 input_data['clinvar__disease_names'], significance, ncbi_desc)
