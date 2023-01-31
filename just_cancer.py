@@ -108,4 +108,3 @@ class CravatPostAggregator (BasePostAggregator):
                 input_data['clinvar__disease_names'], significance, ncbi_desc)
 
         self.longevity_cursor.execute(sql, task)
-        return {"col1":""}
